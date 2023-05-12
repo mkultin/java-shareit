@@ -21,17 +21,8 @@ public class InMemoryUserDao implements UserDao {
     }
 
     @Override
-    public User getUserById(Long id) {
-        if (users.containsKey(id)) {
-            return users.get(id);
-        } else {
-            throw new NotFoundException("Пользователь с id=" + id + " не найден.");
-        }
-    }
-
-    @Override
-    public List<User> getUsersByIds(Set<Long> ids) {
-        return null;
+    public Optional<User> getUserById(Long id) {
+        return Optional.ofNullable(users.get(id));
     }
 
     @Override

@@ -5,10 +5,7 @@ import org.springframework.stereotype.Component;
 import ru.practicum.shareit.expections.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -37,13 +34,8 @@ public class InMemoryItemDao implements ItemDao {
     }
 
     @Override
-    public Item getItemById(Long itemId) {
-        if (!items.containsKey(itemId)) {
-            throw new NotFoundException("Вещь с id = " + itemId + "не найдена.");
-        }
-        Item item = items.get(itemId);
-        log.info("Получена вещь name={}, id={}", item.getName(), item.getId());
-        return item;
+    public Optional<Item> getItemById(Long itemId) {
+        return Optional.ofNullable(items.get(itemId));
     }
 
     @Override
@@ -58,9 +50,9 @@ public class InMemoryItemDao implements ItemDao {
     @Override
     public List<Item> search(String text) {
         List<Item> itemsByOwner = items.values().stream()
-                .filter(item -> Objects.equals(item.getAvailable(), true))
-                .filter(item -> item.getName().toLowerCase().contains(text) ||
-                        item.getDescription().toLowerCase().contains(text))
+                .filter(item -> Objects.equals(item.getAvailable(), true)
+                        && (item.getName().toLowerCase().contains(text) ||
+                        item.getDescription().toLowerCase().contains(text)))
                 .collect(Collectors.toList());
         log.info("Получены вещи по запросу text={}.", text);
         return itemsByOwner;
