@@ -44,12 +44,12 @@ public class ItemServiceImpl implements ItemService {
                     itemToUpdate.getOwner() + "не найдена.");
         }
         Item item = ItemMapper.toItem(itemDto, ownerId);
-        if (item.getName() == null || item.getName().isBlank()) item.setName(itemToUpdate.getName());
-        if (item.getDescription() == null || item.getDescription().isBlank()) {
-            item.setDescription(itemToUpdate.getDescription());
+        if (itemDto.getName() != null && !itemDto.getName().isBlank()) itemToUpdate.setName(itemDto.getName());
+        if (itemDto.getDescription() != null && !itemDto.getDescription().isBlank()) {
+            itemToUpdate.setDescription(itemDto.getDescription());
         }
-        if (item.getAvailable() == null) item.setAvailable(itemToUpdate.getAvailable());
-        return ItemMapper.toItemDto(itemDao.update(item));
+        if (itemDto.getAvailable() != null) itemToUpdate.setAvailable(itemDto.getAvailable());
+        return ItemMapper.toItemDto(itemToUpdate);
     }
 
     @Override

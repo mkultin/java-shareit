@@ -8,8 +8,6 @@ import java.util.Optional;
 public interface ItemDao {
     Item create(Item item);
 
-    Item update(Item item);
-
     Optional<Item> getItemById(Long itemId);
 
     List<Item> getItemsByOwner(Long userId);

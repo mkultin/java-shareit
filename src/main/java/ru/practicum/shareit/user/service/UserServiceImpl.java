@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.expections.ConflictException;
 import ru.practicum.shareit.expections.NotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.dao.UserDao;
@@ -40,6 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto create(UserDto userDto) {
+        validateEmail(userDto);
         return UserMapper.toUserDto(userDao.create(UserMapper.toUser(userDto)));
     }
 
@@ -48,13 +50,26 @@ public class UserServiceImpl implements UserService {
         userDto.setId(id);
         User userToUpdate = userDao.getUserById(id)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id=" + id + " не найден."));
-        if (userDto.getEmail() == null || userDto.getEmail().isBlank()) userDto.setEmail(userToUpdate.getEmail());
-        if (userDto.getName() == null || userDto.getName().isBlank()) userDto.setName(userToUpdate.getName());
-        return UserMapper.toUserDto(userDao.updateUser(UserMapper.toUser(userDto)));
+        if (userDto.getEmail() != null && !userDto.getEmail().isBlank()
+                && !userDto.getEmail().equals(userToUpdate.getEmail())) {
+            validateEmail(userDto);
+            userToUpdate.setEmail(userDto.getEmail());
+        }
+        if (userDto.getName() != null && !userDto.getName().isBlank()) userToUpdate.setName(userDto.getName());
+        return UserMapper.toUserDto(userToUpdate);
     }
 
     @Override
     public void delete(Long id) {
         userDao.delete(id);
+    }
+
+    private void validateEmail(UserDto userDto) {
+        List<String> emails = userDao.getUsers().stream()
+                .map(User::getEmail)
+                .collect(Collectors.toList());
+        if (emails.contains(userDto.getEmail())) {
+            throw new ConflictException("Пользователь с Email= " + userDto.getEmail() + " уже существует");
+        }
     }
 }

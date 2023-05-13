@@ -2,7 +2,6 @@ package ru.practicum.shareit.item.dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.expections.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
@@ -20,16 +19,6 @@ public class InMemoryItemDao implements ItemDao {
         items.put(item.getId(), item);
         log.info("Пользователем id={} добавлена новая вещь name={}, id={}",
                 item.getOwner(), item.getName(), item.getId());
-        return item;
-    }
-
-    @Override
-    public Item update(Item item) {
-        if (!items.containsKey(item.getId())) {
-            throw new NotFoundException("Вещь с id = " + item.getId() + "не найдена.");
-        }
-        items.put(item.getId(), item);
-        log.info("Обновлена вещь name={}, id={}", item.getName(), item.getId());
         return item;
     }
 

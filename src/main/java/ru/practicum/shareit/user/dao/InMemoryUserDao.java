@@ -2,12 +2,10 @@ package ru.practicum.shareit.user.dao;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.expections.ConflictException;
 import ru.practicum.shareit.expections.NotFoundException;
 import ru.practicum.shareit.user.User;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -27,24 +25,9 @@ public class InMemoryUserDao implements UserDao {
 
     @Override
     public User create(User user) {
-        validateEmail(user.getEmail());
         user.setId(id++);
         users.put(user.getId(), user);
         log.info("Создан новый пользователь {}, id={}", user.getName(), user.getId());
-        return user;
-    }
-
-    @Override
-    public User updateUser(User user) {
-        if (!users.containsKey(user.getId())) {
-            throw new NotFoundException("Пользователь не найден.");
-        }
-        User userToUpdate = users.get(user.getId());
-        if (!user.getEmail().equals(userToUpdate.getEmail())) {
-            validateEmail(user.getEmail());
-        }
-        users.put(user.getId(), user);
-        log.info("Обновлен пользователь {}, id={}", user.getName(), user.getId());
         return user;
     }
 
@@ -55,14 +38,5 @@ public class InMemoryUserDao implements UserDao {
         }
         users.remove(id);
         log.info("Пользователь id={} удален", id);
-    }
-
-    private void validateEmail(String email) {
-        List<String> emails = users.values().stream()
-                .map(User::getEmail)
-                .collect(Collectors.toList());
-        if (emails.contains(email)) {
-            throw new ConflictException("Пользователь с Email= " + email + " уже существует");
-        }
     }
 }
