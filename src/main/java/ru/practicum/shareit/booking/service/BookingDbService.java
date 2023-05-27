@@ -65,8 +65,7 @@ public class BookingDbService implements BookingService {
                 throw new ValidationException("Статус бронирования id=" + bookingId + " уже подтвержён.");
             }
             booking.setStatus(Status.APPROVED);
-        }
-        else {
+        } else {
             booking.setStatus(Status.REJECTED);
         }
         booking = repository.save(booking);
