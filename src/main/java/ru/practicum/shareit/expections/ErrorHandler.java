@@ -36,13 +36,13 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(final Throwable exception) {
         log.warn(exception.getMessage(), exception);
-        return new ErrorResponse("Произошла непредвиденная ошибка.");
+        return new ErrorResponse(exception.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleMethodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         log.warn(exception.getMessage(), exception);
-        return new ErrorResponse("Произошла непредвиденная ошибка.");
+        return new ErrorResponse(exception.getMessage());
     }
 }
