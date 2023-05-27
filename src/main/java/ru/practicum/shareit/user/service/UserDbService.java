@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserDbService implements UserService {
     private final UserRepository userRepository;
+
     @Override
     public List<UserDto> getUsers() {
         List<User> users = userRepository.findAll();
