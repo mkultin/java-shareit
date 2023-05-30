@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Builder
@@ -14,30 +15,28 @@ import java.util.Objects;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "items")
-public class Item {
+@Table(name = "comments")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String name;
+    private String text;
+    @ManyToOne
+    @JoinColumn(name = "item_id", nullable = false)
+    private Item item;
+    @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
+    private User author;
     @Column(nullable = false)
-    private String description;
-    @Column(nullable = false)
-    private Boolean available;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    @ToString.Exclude
-    private User owner;
-    @Column(name = "request_id")
-    private Long request;
+    private LocalDateTime created;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Item item = (Item) o;
-        return getId() != null && Objects.equals(getId(), item.getId());
+        Comment comment = (Comment) o;
+        return getId() != null && Objects.equals(getId(), comment.getId());
     }
 
     @Override
