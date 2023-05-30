@@ -1,9 +1,9 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.shareit.booking.dto.BookingDtoForItem;
+import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class ItemMapper {
                 .build();
     }
 
-    public ItemGetDto toOwnersItemGetDto(Item item, BookingDtoForItem lastBooking, BookingDtoForItem nextBooking,
+    public ItemGetDto toOwnersItemGetDto(Item item, BookingShort lastBooking, BookingShort nextBooking,
                                          List<CommentDto> itemComments) {
         return ItemGetDto.builder()
                 .id(item.getId())

@@ -1,7 +1,8 @@
 package ru.practicum.shareit.booking.dto;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import ru.practicum.shareit.service.Marker;
 
 import javax.validation.constraints.Future;
@@ -9,7 +10,8 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@EqualsAndHashCode
 @Builder
 public class BookingCreateDto {
     @NotNull(message = "Укажите дату старта бронирования", groups = {Marker.Create.class})

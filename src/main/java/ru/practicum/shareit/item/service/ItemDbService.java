@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.booking.BookingRepository;
-import ru.practicum.shareit.booking.dto.BookingDtoForItem;
+import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.expections.NotFoundException;
 import ru.practicum.shareit.expections.ValidationException;
@@ -15,7 +15,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -107,7 +107,7 @@ public class ItemDbService implements ItemService {
     public CommentDto createComment(CommentDto commentDto, Long itemId, Long authorId) {
         Item item = getItem(itemId);
         User author = userService.getUser(authorId);
-        BookingDtoForItem booking = bookingRepository.findFirstByItemIdAndBookerIdAndEndBeforeAndStatus(itemId,
+        BookingShort booking = bookingRepository.findFirstByItemIdAndBookerIdAndEndBeforeAndStatus(itemId,
                 authorId, LocalDateTime.now(), Status.APPROVED);
         if (booking == null) {
             throw new ValidationException("Чтобы оставить комментарий для вещи " +
@@ -120,10 +120,10 @@ public class ItemDbService implements ItemService {
 
 
     private ItemGetDto getItemDtoWithBookings(Item item) {
-        BookingDtoForItem lastBooking = bookingRepository
+        BookingShort lastBooking = bookingRepository
                 .findFirstByItemIdAndStartBeforeAndStatusOrderByEndDesc(item.getId(), LocalDateTime.now(),
                         Status.APPROVED);
-        BookingDtoForItem nextBooking = bookingRepository
+        BookingShort nextBooking = bookingRepository
                 .findFirstByItemIdAndStartAfterAndStatusOrderByStartAsc(item.getId(), LocalDateTime.now(),
                         Status.APPROVED);
         return ItemMapper.toOwnersItemGetDto(item,
@@ -131,6 +131,9 @@ public class ItemDbService implements ItemService {
     }
 
     private List<CommentDto> getItemComments(Item item) {
-        return commentRepository.findAllByItemIdOrderByCreatedDesc(item.getId());
+        List<Comment> comments = commentRepository.findAllByItemIdOrderByCreatedDesc(item.getId());
+        return comments.stream()
+                .map(CommentMapper::toCommentDto)
+                .collect(Collectors.toList());
     }
 }

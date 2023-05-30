@@ -1,11 +1,11 @@
 package ru.practicum.shareit.booking.dto;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.dto.UserMapper;
 
 @UtilityClass
