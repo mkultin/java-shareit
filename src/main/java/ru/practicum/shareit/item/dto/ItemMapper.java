@@ -1,12 +1,9 @@
 package ru.practicum.shareit.item.dto;
 
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
-import org.springframework.beans.factory.annotation.Autowired;
 import ru.practicum.shareit.booking.model.BookingShort;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.ItemRequest;
-import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
