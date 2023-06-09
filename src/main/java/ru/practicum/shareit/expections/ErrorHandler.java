@@ -26,13 +26,6 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleConflictException(final ConflictException exception) {
-        log.warn(exception.getMessage(), exception);
-        return new ErrorResponse(exception.getMessage());
-    }
-
-    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleThrowable(final Throwable exception) {
         log.warn(exception.getMessage(), exception);

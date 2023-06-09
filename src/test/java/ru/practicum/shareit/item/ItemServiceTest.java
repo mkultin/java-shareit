@@ -14,6 +14,7 @@ import ru.practicum.shareit.expections.ValidationException;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemGetDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
@@ -173,5 +174,15 @@ public class ItemServiceTest {
 
         assertThat(itemService.getItemsByRequest(itemRequestDto.getId()).size(), equalTo(1));
         assertThat(itemService.getItemsByRequest(itemRequestDto.getId()).get(0), equalTo(itemDto));
+    }
+
+    @Test
+    void getItem() {
+        Item item = itemService.getItem(1L);
+        ItemGetDto itemDto = itemService.getItemById(1L, 1L);
+        Item item1 = itemService.getItem(1L);
+
+        assertThat(item.getId(), equalTo(itemDto.getId()));
+        assertThat(item1, equalTo(item));
     }
 }
