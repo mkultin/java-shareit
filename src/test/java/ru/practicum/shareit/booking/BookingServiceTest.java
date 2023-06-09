@@ -14,15 +14,12 @@ import ru.practicum.shareit.booking.enums.Status;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.expections.NotFoundException;
 import ru.practicum.shareit.expections.ValidationException;
-import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -40,8 +37,6 @@ public class BookingServiceTest {
     UserService userService;
     @Autowired
     BookingService bookingService;
-    @Autowired
-    ItemRequestService itemRequestService;
 
     UserDto user1 = UserDto.builder()
             .name("User1")
@@ -51,13 +46,6 @@ public class BookingServiceTest {
     UserDto user2 = UserDto.builder()
             .name("User2")
             .email("user2@email.com")
-            .build();
-
-    CommentDto commentDto = CommentDto.builder()
-            .id(1L)
-            .text("text")
-            .authorName(user1.getName())
-            .created(LocalDateTime.now())
             .build();
 
     ItemDto itemDto1 = ItemDto.builder()
