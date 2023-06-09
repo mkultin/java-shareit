@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -15,6 +16,8 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.storage.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -34,14 +37,27 @@ public class ItemDbService implements ItemService {
     private final UserService userService;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
 
     @Transactional
     @Override
     public ItemDto create(ItemDto itemDto, Long ownerId) {
-        Item item = itemRepository.save(ItemMapper.toItem(
-                itemDto, userService.getUser(ownerId)));
-        log.info("Пользователем id={} добавлена новая вещь name={}, id={}",
-                item.getOwner(), item.getName(), item.getId());
+        Item itemToSave;
+        if (itemDto.getRequestId() != null) {
+            ItemRequest itemRequest = itemRequestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new NotFoundException("Запрос с id = " + itemDto.getRequestId() + "не найден."));
+            itemToSave = ItemMapper.toItem(itemDto, userService.getUser(ownerId), itemRequest);
+        } else {
+            itemToSave = ItemMapper.toItem(itemDto, userService.getUser(ownerId));
+        }
+        Item item = itemRepository.save(itemToSave);
+        if (item.getRequest() != null) {
+            log.info("Пользователем id={} по запросу id={} добавлена новая вещь name={}, id={}",
+                    item.getOwner().getId(), item.getRequest().getId(), item.getName(), item.getId());
+        } else {
+            log.info("Пользователем id={} добавлена новая вещь name={}, id={}",
+                    item.getOwner().getId(), item.getName(), item.getId());
+        }
         return ItemMapper.toItemDto(item);
     }
 
@@ -78,8 +94,8 @@ public class ItemDbService implements ItemService {
     }
 
     @Override
-    public List<ItemGetDto> getItemsByOwner(Long userId) {
-        List<Item> itemsByOwner = itemRepository.findByOwnerId(userId);
+    public List<ItemGetDto> getItemsByOwner(Long userId, Integer from, Integer size) {
+        List<Item> itemsByOwner = itemRepository.findByOwnerId(userId, getPageByParams(from, size));
         log.info("Получен список вещей для пользователя id={}", userId);
         return itemsByOwner.stream()
                 .map(this::getItemDtoWithBookings)
@@ -87,9 +103,10 @@ public class ItemDbService implements ItemService {
     }
 
     @Override
-    public List<ItemDto> search(String text) {
+    public List<ItemDto> search(String text, Integer from, Integer size) {
         if (text.isBlank()) return Collections.emptyList();
-        List<Item> itemsBySearchQuery = itemRepository.findBySearchQuery(text.toLowerCase());
+        List<Item> itemsBySearchQuery = itemRepository.findBySearchQuery(text.toLowerCase(),
+                getPageByParams(from, size));
         log.info("Получены доступные вещи по запросу '{}'", text);
         return itemsBySearchQuery.stream()
                 .map(ItemMapper::toItemDto)
@@ -118,6 +135,15 @@ public class ItemDbService implements ItemService {
         return CommentMapper.toCommentDto(comment);
     }
 
+    @Override
+    public List<ItemDto> getItemsByRequest(Long requestId) {
+        List<Item> items = itemRepository.findByRequestId(requestId);
+        log.info("Получены вещи, созданные по запросу id={}", requestId);
+        return items.stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.toList());
+    }
+
 
     private ItemGetDto getItemDtoWithBookings(Item item) {
         BookingShort lastBooking = bookingRepository
@@ -135,5 +161,10 @@ public class ItemDbService implements ItemService {
         return comments.stream()
                 .map(CommentMapper::toCommentDto)
                 .collect(Collectors.toList());
+    }
+
+    private PageRequest getPageByParams(Integer from, Integer size) {
+        if (from < 0 || size < 0) throw new ValidationException("Переданы неверные параметры пагинации");
+        return PageRequest.of(from > 0 ? from / size : 0, size);
     }
 }
