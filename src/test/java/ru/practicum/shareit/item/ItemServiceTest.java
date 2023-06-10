@@ -18,7 +18,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -27,6 +26,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.practicum.shareit.Entities.*;
 
 
 @SpringBootTest
@@ -35,50 +35,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class ItemServiceTest {
     @Autowired
-    ItemService itemService;
+    private final ItemService itemService;
     @Autowired
-    UserService userService;
+    private final UserService userService;
     @Autowired
-    BookingService bookingService;
+    private final BookingService bookingService;
     @Autowired
-    ItemRequestService itemRequestService;
+    private final ItemRequestService itemRequestService;
 
-    UserDto user1 = UserDto.builder()
-            .name("User1")
-            .email("user1@email.com")
-            .build();
-
-    UserDto user2 = UserDto.builder()
-            .name("User2")
-            .email("user2@email.com")
-            .build();
-
-    CommentDto commentDto = CommentDto.builder()
-            .id(1L)
-            .text("text")
-            .authorName(user1.getName())
-            .created(LocalDateTime.now())
-            .build();
-
-    ItemDto itemDto1 = ItemDto.builder()
-            .name("Item")
-            .description("Description")
-            .available(true)
-            .build();
-
-    ItemDto itemDto2 = ItemDto.builder()
-            .name("Item2")
-            .description("Description2")
-            .available(true)
-            .build();
-
-    ItemDto itemDto3 = ItemDto.builder()
-            .name("Item3")
-            .description("Description3")
-            .available(true)
-            .build();
-
-    BookingCreateDto bookingCreateDto = BookingCreateDto.builder()
+    private final BookingCreateDto bookingCreateDto = BookingCreateDto.builder()
             .start(LocalDateTime.now())
             .end(LocalDateTime.now().plusNanos(2L))
             .itemId(2L)
@@ -86,8 +51,8 @@ public class ItemServiceTest {
 
     @BeforeEach
     void beforeEach() {
-        userService.create(user1);
-        userService.create(user2);
+        userService.create(userDto1);
+        userService.create(userDto2);
         itemService.create(itemDto1, 1L);
         itemService.create(itemDto2, 2L);
         itemService.create(itemDto3, 2L);

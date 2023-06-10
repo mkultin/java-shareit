@@ -8,25 +8,19 @@ import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.user.dto.UserDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.practicum.shareit.Entities.userDto1;
 
 @JsonTest
 class UserDtoJsonTests {
     @Autowired
-    JacksonTester<UserDto> json;
+    private JacksonTester<UserDto> json;
 
     @Test
     void testUserDto() throws Exception {
-        UserDto userDto = UserDto
-                .builder()
-                .id(1L)
-                .name("user")
-                .email("user@mail.ru")
-                .build();
-
-        JsonContent<UserDto> result = json.write(userDto);
+        JsonContent<UserDto> result = json.write(userDto1);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
-        assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("user");
-        assertThat(result).extractingJsonPathStringValue("$.email").isEqualTo("user@mail.ru");
+        assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("User1");
+        assertThat(result).extractingJsonPathStringValue("$.email").isEqualTo("User1@email.com");
     }
 }

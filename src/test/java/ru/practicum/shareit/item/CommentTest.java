@@ -9,13 +9,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommentTest {
-    Comment comment = Comment.builder()
+    private final Comment comment = Comment.builder()
             .id(1L)
             .text("text")
             .created(LocalDateTime.of(1111, 1, 1, 1, 1))
             .build();
 
-    Comment comment1 = Comment.builder()
+    private final Comment comment1 = Comment.builder()
             .id(1L)
             .text("text")
             .created(LocalDateTime.of(1111, 1, 1, 1, 1))

@@ -8,27 +8,22 @@ import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.practicum.shareit.Entities.itemDto1;
 
 @JsonTest
 public class ItemDtoJsonTest {
 
     @Autowired
-    JacksonTester<ItemDto> json;
+    private JacksonTester<ItemDto> json;
 
     @Test
     void testItemDto() throws Exception {
-        ItemDto itemDto = ItemDto.builder()
-                .id(1L)
-                .name("Item")
-                .description("Description")
-                .available(true)
-                .build();
 
-        JsonContent<ItemDto> result = json.write(itemDto);
+        JsonContent<ItemDto> result = json.write(itemDto1);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
-        assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("Item");
-        assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("Description");
+        assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("Item1");
+        assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("Description1");
         assertThat(result).extractingJsonPathBooleanValue("$.available").isEqualTo(true);
 
     }

@@ -10,14 +10,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BookingTest {
-    Booking booking = Booking.builder()
+    private final Booking booking = Booking.builder()
             .id(1L)
             .start(LocalDateTime.of(1000, 1, 1, 1, 1, 1))
             .end(LocalDateTime.of(1000, 1, 1, 1, 1, 2))
             .status(Status.APPROVED)
             .build();
 
-    Booking booking2 = Booking.builder()
+    private final Booking booking2 = Booking.builder()
             .id(1L)
             .start(LocalDateTime.of(1000, 1, 1, 1, 1, 1))
             .end(LocalDateTime.of(1000, 1, 1, 1, 1, 2))

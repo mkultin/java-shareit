@@ -4,6 +4,8 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -20,11 +22,11 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.practicum.shareit.Entities.*;
 
 @SpringBootTest
 @Transactional
@@ -32,56 +34,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class BookingServiceTest {
     @Autowired
-    ItemService itemService;
+    private final ItemService itemService;
     @Autowired
-    UserService userService;
+    private final UserService userService;
     @Autowired
-    BookingService bookingService;
-
-    UserDto user1 = UserDto.builder()
-            .name("User1")
-            .email("user1@email.com")
-            .build();
-
-    UserDto user2 = UserDto.builder()
-            .name("User2")
-            .email("user2@email.com")
-            .build();
-
-    ItemDto itemDto1 = ItemDto.builder()
-            .name("Item")
-            .description("Description")
-            .available(true)
-            .build();
-
-    ItemDto itemDto2 = ItemDto.builder()
-            .name("Item2")
-            .description("Description2")
-            .available(true)
-            .build();
-
-    ItemDto itemDto3 = ItemDto.builder()
-            .name("Item3")
-            .description("Description3")
-            .available(true)
-            .build();
-
-    BookingCreateDto bookingCreateDto1 = BookingCreateDto.builder()
-            .start(LocalDateTime.now())
-            .end(LocalDateTime.now().plusNanos(2L))
-            .itemId(2L)
-            .build();
-
-    BookingCreateDto bookingCreateDto2 = BookingCreateDto.builder()
-            .start(LocalDateTime.now())
-            .end(LocalDateTime.now().plusNanos(2L))
-            .itemId(1L)
-            .build();
+    private final BookingService bookingService;
 
     @BeforeEach
     void beforeEach() {
-        userService.create(user1);
-        userService.create(user2);
+        userService.create(userDto1);
+        userService.create(userDto2);
         itemService.create(itemDto1, 1L);
         itemService.create(itemDto2, 2L);
         itemService.create(itemDto3, 2L);
@@ -154,24 +116,20 @@ public class BookingServiceTest {
                 () -> bookingService.getBookingsByBooker(1L, "lays", 0, 10));
         assertThrows(NotFoundException.class,
                 () -> bookingService.getBookingsByBooker(3L, "lays", 0, 10));
+    }
 
-        List<BookingDto> bookings = bookingService.getBookingsByBooker(1L, "ALL", 0, 10);
-
-        assertThat(bookings.size(), equalTo(1));
-
-        bookings = bookingService.getBookingsByBooker(1L, "CURRENT", 0, 10);
-
-        assertThat(bookings.size(), equalTo(0));
-
-        bookings = bookingService.getBookingsByBooker(1L, "PAST", 0, 10);
+    @ParameterizedTest
+    @ValueSource(strings = {"ALL", "PAST"})
+    void getBookingsByBookerAndStatesAllAndPast(String input) {
+        bookings = bookingService.getBookingsByBooker(1L, input, 0, 10);
 
         assertThat(bookings.size(), equalTo(1));
+    }
 
-        bookings = bookingService.getBookingsByBooker(1L, "WAITING", 0, 10);
-
-        assertThat(bookings.size(), equalTo(0));
-
-        bookings = bookingService.getBookingsByBooker(1L, "REJECTED", 0, 10);
+    @ParameterizedTest
+    @ValueSource(strings = {"CURRENT", "FUTURE", "WAITING", "REJECTED"})
+    void getBookingsByBookerAndOtherStates(String input) {
+        bookings = bookingService.getBookingsByBooker(1L, input, 0, 10);
 
         assertThat(bookings.size(), equalTo(0));
     }
@@ -182,28 +140,20 @@ public class BookingServiceTest {
                 () -> bookingService.getBookingsByBooker(1L, "lays", 0, 10));
         assertThrows(NotFoundException.class,
                 () -> bookingService.getBookingsByBooker(3L, "lays", 0, 10));
+    }
 
-        List<BookingDto> bookings = bookingService.getBookingsForBookerItems(2L, "ALL", 0, 10);
-
-        assertThat(bookings.size(), equalTo(1));
-
-        bookings = bookingService.getBookingsForBookerItems(2L, "CURRENT", 0, 10);
-
-        assertThat(bookings.size(), equalTo(0));
-
-        bookings = bookingService.getBookingsForBookerItems(2L, "PAST", 0, 10);
+    @ParameterizedTest
+    @ValueSource(strings = {"ALL", "PAST"})
+    void getBookingsForBookerItemsByStatesAllAndPast(String input) {
+        bookings = bookingService.getBookingsForBookerItems(2L, input, 0, 10);
 
         assertThat(bookings.size(), equalTo(1));
+    }
 
-        bookings = bookingService.getBookingsForBookerItems(2L, "FUTURE", 0, 10);
-
-        assertThat(bookings.size(), equalTo(0));
-
-        bookings = bookingService.getBookingsForBookerItems(2L, "WAITING", 0, 10);
-
-        assertThat(bookings.size(), equalTo(0));
-
-        bookings = bookingService.getBookingsForBookerItems(2L, "REJECTED", 0, 10);
+    @ParameterizedTest
+    @ValueSource(strings = {"CURRENT", "FUTURE", "WAITING", "REJECTED"})
+    void getBookingsForBookerItemsByOtherStates(String input) {
+        bookings = bookingService.getBookingsForBookerItems(2L, input, 0, 10);
 
         assertThat(bookings.size(), equalTo(0));
     }

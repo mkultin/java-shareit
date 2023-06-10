@@ -5,16 +5,11 @@ import ru.practicum.shareit.item.model.Item;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ru.practicum.shareit.Entities.item;
 
 public class ItemTest {
-    Item item = Item.builder()
-            .id(1L)
-            .name("Item")
-            .description("description")
-            .available(true)
-            .build();
 
-    Item item1 = Item.builder()
+    private final Item sameItem = Item.builder()
             .id(1L)
             .name("Item")
             .description("description")
@@ -23,7 +18,7 @@ public class ItemTest {
 
     @Test
     void testItem() {
-        assertEquals(item, item1);
-        assertTrue(item.hashCode() == item1.hashCode());
+        assertEquals(item, sameItem);
+        assertTrue(item.hashCode() == sameItem.hashCode());
     }
 }

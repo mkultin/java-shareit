@@ -17,7 +17,7 @@ public class ItemRequestController {
     private final ItemRequestService itemRequestService;
 
     @PostMapping
-    ItemRequestDto create(@Validated(Marker.Create.class) @RequestBody ItemRequestDto itemRequestDto,
+    public ItemRequestDto create(@Validated(Marker.Create.class) @RequestBody ItemRequestDto itemRequestDto,
                           @RequestHeader(Constants.USER_HEADER) Long userId) {
         return itemRequestService.create(itemRequestDto, userId);
     }

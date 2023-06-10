@@ -32,21 +32,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BookingControllerTest {
 
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    BookingService bookingService;
+    private BookingService bookingService;
 
     @Autowired
-    MockMvc mvc;
+    private MockMvc mvc;
 
-    BookingCreateDto bookingCreateDto = BookingCreateDto.builder()
+    private final BookingCreateDto bookingCreateDto = BookingCreateDto.builder()
             .start(LocalDateTime.of(2024, 1, 1, 0, 0))
             .end(LocalDateTime.of(2024, 1, 2, 0, 0))
             .itemId(1L)
             .build();
 
-    BookingDto bookingDto = BookingDto.builder()
+    private final BookingDto bookingDto = BookingDto.builder()
             .id(1L)
             .start(LocalDateTime.of(2024, 1, 1, 0, 0))
             .end(LocalDateTime.of(2024, 1, 2, 0, 0))

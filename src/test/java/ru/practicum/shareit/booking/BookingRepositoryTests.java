@@ -151,9 +151,7 @@ class BookingRepositoryTests {
         BookingShort bookingShort = bookingRepository
                 .findFirstByItemIdAndStartBeforeAndStatusOrderByEndDesc(item.getId(),
                         LocalDateTime.of(2024, 1, 1, 2, 0), WAITING);
-
-        assertThat(bookingShort.getId(), equalTo(1L));
-        assertThat(bookingShort.getBookerId(), equalTo(user2.getId()));
+        assertThatBookingIdEq1AndBookingIdEqU2Id(bookingShort);
     }
 
     @Test
@@ -161,8 +159,7 @@ class BookingRepositoryTests {
         BookingShort bookingShort = bookingRepository
                 .findFirstByItemIdAndStartAfterAndStatusOrderByStartAsc(item.getId(),
                         LocalDateTime.of(2023, 12, 31, 23, 0), WAITING);
-        assertThat(bookingShort.getId(), equalTo(1L));
-        assertThat(bookingShort.getBookerId(), equalTo(user2.getId()));
+        assertThatBookingIdEq1AndBookingIdEqU2Id(bookingShort);
     }
 
     @Test
@@ -170,7 +167,11 @@ class BookingRepositoryTests {
         BookingShort bookingShort = bookingRepository
                 .findFirstByItemIdAndBookerIdAndEndBeforeAndStatus(item.getId(), user2.getId(),
                         LocalDateTime.of(2024, 1, 3, 23, 0), WAITING);
-        assertThat(bookingShort.getId(), equalTo(1L));
-        assertThat(bookingShort.getBookerId(), equalTo(user2.getId()));
+        assertThatBookingIdEq1AndBookingIdEqU2Id(bookingShort);
+    }
+
+    private void assertThatBookingIdEq1AndBookingIdEqU2Id(BookingShort booking) {
+        assertThat(booking.getId(), equalTo(1L));
+        assertThat(booking.getBookerId(), equalTo(user2.getId()));
     }
 }

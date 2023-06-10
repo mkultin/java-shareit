@@ -7,25 +7,19 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.practicum.shareit.Entities.itemRequestDto;
 
 @JsonTest
 public class ItemRequestDtoJsonTest {
 
     @Autowired
-    JacksonTester<ItemRequestDto> json;
+    private JacksonTester<ItemRequestDto> json;
 
     @Test
     void testItemRequestDto() throws Exception {
-        ItemRequestDto itemRequestDto = ItemRequestDto.builder()
-                .id(1L)
-                .description("Description")
-                .created(LocalDateTime.now())
-                .requestorId(1L)
-                .build();
 
         JsonContent<ItemRequestDto> result = json.write(itemRequestDto);
 

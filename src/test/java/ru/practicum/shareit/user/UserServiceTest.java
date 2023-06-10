@@ -16,6 +16,7 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static ru.practicum.shareit.Entities.*;
 
 @SpringBootTest
 @Transactional
@@ -23,25 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserServiceTest {
     @Autowired
-    private UserService userService;
-
-    UserDto userDto1 = UserDto.builder()
-            .id(1L)
-            .email("user1@email.ru")
-            .name("User1")
-            .build();
-
-    UserDto userDto2 = UserDto.builder()
-            .id(2L)
-            .email("user2@email.ru")
-            .name("User2")
-            .build();
-
-    UserDto userDto3 = UserDto.builder()
-            .id(3L)
-            .email("user3@email.ru")
-            .name("User3")
-            .build();
+    private final UserService userService;
 
     @BeforeEach
     void beforeEach() {

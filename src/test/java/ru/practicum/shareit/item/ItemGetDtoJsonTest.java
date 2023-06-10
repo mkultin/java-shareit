@@ -8,21 +8,16 @@ import org.springframework.boot.test.json.JsonContent;
 import ru.practicum.shareit.item.dto.ItemGetDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static ru.practicum.shareit.Entities.itemGetDto;
 
 @JsonTest
 public class ItemGetDtoJsonTest {
 
     @Autowired
-    JacksonTester<ItemGetDto> json;
+    private JacksonTester<ItemGetDto> json;
 
     @Test
     void testItemGetDto() throws Exception {
-        ItemGetDto itemGetDto = ItemGetDto.builder()
-                .id(1L)
-                .name("Item")
-                .description("Description")
-                .available(true)
-                .build();
 
         JsonContent<ItemGetDto> result = json.write(itemGetDto);
 
