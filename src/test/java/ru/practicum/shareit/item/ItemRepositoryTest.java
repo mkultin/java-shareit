@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.item.dto.ItemMapper;
-import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.storage.ItemRequestRepository;
@@ -49,7 +48,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    void findByOwnerId() throws Exception {
+    void findByOwnerId() {
         assertThat(itemRepository.findByOwnerId(user.getId(), PageRequest.ofSize(5)).size(),
                 equalTo(1));
 
@@ -58,7 +57,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    void findBySearchQuery() throws Exception {
+    void findBySearchQuery() {
         assertThat(itemRepository.findBySearchQuery("iitem", PageRequest.ofSize(5)).size(),
                 equalTo(0));
         assertThat(itemRepository.findBySearchQuery("item", PageRequest.ofSize(5)).size(),
@@ -66,7 +65,7 @@ public class ItemRepositoryTest {
     }
 
     @Test
-    void findByRequestId() throws Exception {
+    void findByRequestId() {
         assertThat(itemRepository.findByRequestId(itemRequest.getId()).size(),
                 equalTo(1));
     }
