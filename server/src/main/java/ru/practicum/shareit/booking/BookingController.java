@@ -18,7 +18,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public BookingDto create(@Validated(Marker.Create.class) @RequestBody BookingCreateDto booking,
+    public BookingDto create(@RequestBody BookingCreateDto booking,
                              @RequestHeader(Constants.USER_HEADER) Long bookerId) {
         return bookingService.create(booking, bookerId);
     }

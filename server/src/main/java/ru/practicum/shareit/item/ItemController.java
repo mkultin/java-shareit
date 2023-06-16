@@ -19,7 +19,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping
-    public ItemDto create(@Validated(Marker.Create.class) @RequestBody ItemDto itemDto,
+    public ItemDto create(@RequestBody ItemDto itemDto,
                           @RequestHeader(Constants.USER_HEADER) Long ownerId) {
         return itemService.create(itemDto, ownerId);
     }
@@ -50,7 +50,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/comment")
-    public CommentDto createComment(@Validated(Marker.Create.class) @RequestBody CommentDto commentDto,
+    public CommentDto createComment(@RequestBody CommentDto commentDto,
                                     @RequestHeader(Constants.USER_HEADER) Long authorId, @PathVariable Long itemId) {
         return itemService.createComment(commentDto, itemId, authorId);
     }

@@ -18,6 +18,7 @@ import ru.practicum.shareit.service.Marker;
 @Validated
 public class ItemController {
     private final ItemClient itemClient;
+
     @PostMapping
     public ResponseEntity<Object> create(@Validated(Marker.Create.class) @RequestBody ItemDto itemDto,
                                          @RequestHeader(Constants.USER_HEADER) Long ownerId) {
