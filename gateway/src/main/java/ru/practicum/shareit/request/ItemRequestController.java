@@ -34,7 +34,7 @@ public class ItemRequestController {
     public ResponseEntity<Object> getItemRequestsById(@RequestHeader(Constants.USER_HEADER) Long userId,
                                               @PathVariable Long requestId) {
         log.info("Get request: get ItemRequest id={} by userId={}", requestId, userId);
-        return itemRequestClient.getRequestById(requestId, userId);
+        return itemRequestClient.getRequestById(userId, requestId);
     }
 
     @GetMapping("/all")
