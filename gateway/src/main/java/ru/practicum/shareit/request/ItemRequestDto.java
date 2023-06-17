@@ -1,6 +1,8 @@
 package ru.practicum.shareit.request;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import ru.practicum.shareit.service.Marker;
 
 import javax.validation.constraints.NotBlank;
